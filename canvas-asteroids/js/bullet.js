@@ -1,8 +1,8 @@
-var Bullet = (function() {
+let Bullet = (function() {
 	//exposed methods:
 
-	var create = function() {
-		var obj = Object.create(def);
+	let create = function() {
+		let obj = Object.create(def);
 		obj.radius = 4;
 		obj.color = '#FFF';
 		obj.pos = Vec2D.create(0, 0);
@@ -14,7 +14,7 @@ var Bullet = (function() {
 
 	//Bullet definition:
 
-	var def =
+	let def =
 		    {
 			    radius     : null,
 			    color      : null,

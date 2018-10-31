@@ -1,8 +1,8 @@
-var Particle = (function() {
+let Particle = (function() {
 	//exposed methods:
 
-	var create = function() {
-		var obj = Object.create(def);
+	let create = function() {
+		let obj = Object.create(def);
 		obj.radius = 2;
 		obj.color = '#FFF';
 		obj.lifeSpan = 0;
@@ -16,7 +16,7 @@ var Particle = (function() {
 
 	//Ship definition:
 
-	var def =
+	let def =
 		    {
 			    radius     : null,
 			    color      : null,

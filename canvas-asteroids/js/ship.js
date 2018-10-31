@@ -1,8 +1,8 @@
-var Ship = (function() {
+let Ship = (function() {
 	//exposed methods:
 
-	var create = function(x, y, ref) {
-		var obj = Object.create(def);
+	let create = function(x, y, ref) {
+		let obj = Object.create(def);
 		obj.ref = ref;
 		obj.angle = 0;
 		obj.pos = Vec2D.create(x, y);
@@ -17,7 +17,7 @@ var Ship = (function() {
 
 	//Ship definition:
 
-	var def =
+	let def =
 		    {
 			    angle      : null,
 			    pos        : null,

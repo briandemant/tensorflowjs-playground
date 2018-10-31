@@ -1,8 +1,8 @@
-var Pool = (function() {
+let Pool = (function() {
 	//exposed methods:
 
-	var create = function(type, size) {
-		var obj = Object.create(def);
+	let create = function(type, size) {
+		let obj = Object.create(def);
 		obj.init(type, size);
 
 		return obj;
@@ -10,7 +10,7 @@ var Pool = (function() {
 
 	//Ship definition:
 
-	var def =
+	let def =
 		    {
 			    _type    : null,
 			    _size    : null,
@@ -23,8 +23,8 @@ var Pool = (function() {
 				    this._pointer = size;
 				    this._elements = [];
 
-				    var i = 0;
-				    var length = this._size;
+				    let i = 0;
+				    let length = this._size;
 
 				    for (i; i < length; ++i) {
 					    this._elements[i] = this._type.create();

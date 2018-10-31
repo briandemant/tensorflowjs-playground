@@ -1,34 +1,34 @@
 //common vars
 
-var canvas;
-var context;
-var screenWidth;
-var screenHeight;
-var doublePI = Math.PI * 2;
+let canvas;
+let context;
+let screenWidth;
+let screenHeight;
+let doublePI = Math.PI * 2;
 
 //game vars
 
-var ship;
+let ship;
 
-var particlePool;
-var particles;
+let particlePool;
+let particles;
 
-var bulletPool;
-var bullets;
+let bulletPool;
+let bullets;
 
-var asteroidPool;
-var asteroids;
+let asteroidPool;
+let asteroids;
 
-var hScan;
-var asteroidVelFactor = 0;
+let hScan;
+let asteroidVelFactor = 0;
 
 //keyboard vars
 
-var keyLeft = false;
-var keyUp = false;
-var keyRight = false;
-var keyDown = false;
-var keySpace = false;
+let keyLeft = false;
+let keyUp = false;
+let keyRight = false;
+let keyDown = false;
+let keySpace = false;
 
 window.getAnimationFrame =
 	window.requestAnimationFrame ||
@@ -220,7 +220,7 @@ function updateShip() {
 }
 
 function generateThrustParticle() {
-	var p = particlePool.getElement();
+	let p = particlePool.getElement();
 
 	//if the particle pool doesn't have more elements, will return 'null'.
 
@@ -240,10 +240,10 @@ function generateThrustParticle() {
 }
 
 function updateParticles() {
-	var i = particles.length - 1;
+	let i = particles.length - 1;
 
 	for (i; i > -1; --i) {
-		var p = particles[i];
+		let p = particles[i];
 
 		if (p.blacklisted) {
 			p.reset();
@@ -259,10 +259,10 @@ function updateParticles() {
 }
 
 function updateBullets() {
-	var i = bullets.length - 1;
+	let i = bullets.length - 1;
 
 	for (i; i > -1; --i) {
-		var b = bullets[i];
+		let b = bullets[i];
 
 		if (b.blacklisted) {
 			b.reset();
@@ -286,10 +286,10 @@ function updateBullets() {
 }
 
 function updateAsteroids() {
-	var i = asteroids.length - 1;
+	let i = asteroids.length - 1;
 
 	for (i; i > -1; --i) {
-		var a = asteroids[i];
+		let a = asteroids[i];
 
 		if (a.blacklisted) {
 			a.reset();
@@ -312,14 +312,14 @@ function updateAsteroids() {
 	}
 
 	if (asteroids.length < 5) {
-		var factor = (Math.random() * 2) >> 0;
+		let factor = (Math.random() * 2) >> 0;
 
 		generateAsteroid(screenWidth * factor, screenHeight * factor, 60, 'b');
 	}
 }
 
 function generateAsteroid(x, y, radius, type) {
-	var a = asteroidPool.getElement();
+	let a = asteroidPool.getElement();
 
 	//if the bullet pool doesn't have more elements, will return 'null'.
 
@@ -343,15 +343,15 @@ function checkCollisions() {
 }
 
 function checkBulletAsteroidCollisions() {
-	var i = bullets.length - 1;
-	var j;
+	let i = bullets.length - 1;
+	let j;
 
 	for (i; i > -1; --i) {
 		j = asteroids.length - 1;
 
 		for (j; j > -1; --j) {
-			var b = bullets[i];
-			var a = asteroids[j];
+			let b = bullets[i];
+			let a = asteroids[j];
 
 			if (checkDistanceCollision(b, a)) {
 				b.blacklisted = true;
@@ -363,11 +363,11 @@ function checkBulletAsteroidCollisions() {
 }
 
 function checkShipAsteroidCollisions() {
-	var i = asteroids.length - 1;
+	let i = asteroids.length - 1;
 
 	for (i; i > -1; --i) {
-		var a = asteroids[i];
-		var s = ship;
+		let a = asteroids[i];
+		let s = ship;
 
 		if (checkDistanceCollision(a, s)) {
 			if (s.idle) return;
@@ -381,10 +381,10 @@ function checkShipAsteroidCollisions() {
 }
 
 function generateShipExplosion() {
-	var i = 18;
+	let i = 18;
 
 	for (i; i > -1; --i) {
-		var p = particlePool.getElement();
+		let p = particlePool.getElement();
 
 		//if the particle pool doesn't have more elements, will return 'null'.
 
@@ -404,9 +404,9 @@ function generateShipExplosion() {
 }
 
 function checkDistanceCollision(obj1, obj2) {
-	var vx = obj1.pos.getX() - obj2.pos.getX();
-	var vy = obj1.pos.getY() - obj2.pos.getY();
-	var vec = Vec2D.create(vx, vy);
+	let vx = obj1.pos.getX() - obj2.pos.getX();
+	let vy = obj1.pos.getY() - obj2.pos.getY();
+	let vec = Vec2D.create(vx, vy);
 
 	if (vec.getLength() < obj1.radius + obj2.radius) {
 		return true;
@@ -423,10 +423,10 @@ function destroyAsteroid(asteroid) {
 }
 
 function generateAsteroidExplosion(asteroid) {
-	var i = 18;
+	let i = 18;
 
 	for (i; i > -1; --i) {
-		var p = particlePool.getElement();
+		let p = particlePool.getElement();
 
 		//if the particle pool doesn't have more elements, will return 'null'.
 
@@ -499,10 +499,10 @@ function renderShip() {
 function renderParticles() {
 	//inverse for loop = more performance.
 
-	var i = particles.length - 1;
+	let i = particles.length - 1;
 
 	for (i; i > -1; --i) {
-		var p = particles[i];
+		let p = particles[i];
 
 		context.beginPath();
 		context.strokeStyle = p.color;
@@ -515,10 +515,10 @@ function renderParticles() {
 function renderBullets() {
 	//inverse for loop = more performance.
 
-	var i = bullets.length - 1;
+	let i = bullets.length - 1;
 
 	for (i; i > -1; --i) {
-		var b = bullets[i];
+		let b = bullets[i];
 
 		context.beginPath();
 		context.strokeStyle = b.color;
@@ -531,16 +531,16 @@ function renderBullets() {
 function renderAsteroids() {
 	//inverse for loop = more performance.
 
-	var i = asteroids.length - 1;
+	let i = asteroids.length - 1;
 
 	for (i; i > -1; --i) {
-		var a = asteroids[i];
+		let a = asteroids[i];
 
 		context.beginPath();
 		context.lineWidth = (Math.random() > 0.2) ? 4 : 3;
 		context.strokeStyle = a.color;
 
-		var j = a.sides;
+		let j = a.sides;
 
 		context.moveTo((a.pos.getX() + Math.cos(doublePI * (j / a.sides) + a.angle) * a.radius) >> 0, (a.pos.getY() + Math.sin(doublePI * (j / a.sides) + a.angle) * a.radius) >> 0);
 
@@ -558,7 +558,7 @@ function renderAsteroids() {
 function renderScanlines() {
 	//inverse for loop = more performance.
 
-	var i = hScan;
+	let i = hScan;
 
 	context.globalAlpha = 0.05;
 	context.lineWidth = 1;
@@ -575,7 +575,7 @@ function renderScanlines() {
 }
 
 function generateShot() {
-	var b = bulletPool.getElement();
+	let b = bulletPool.getElement();
 
 	//if the bullet pool doesn't have more elements, will return 'null'.
 
@@ -601,10 +601,10 @@ function resetGame() {
 }
 
 function resetAsteroids() {
-	var i = asteroids.length - 1;
+	let i = asteroids.length - 1;
 
 	for (i; i > -1; --i) {
-		var a = asteroids[i];
+		let a = asteroids[i];
 		a.blacklisted = true;
 	}
 }
