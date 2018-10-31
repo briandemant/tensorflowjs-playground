@@ -1,9 +1,7 @@
-var Ship = (function()
-{
+var Ship = (function() {
 	//exposed methods:
 
-	var create = function(x, y, ref)
-	{
+	var create = function(x, y, ref) {
 		var obj = Object.create(def);
 		obj.ref = ref;
 		obj.angle = 0;
@@ -20,46 +18,41 @@ var Ship = (function()
 	//Ship definition:
 
 	var def =
-	{
-		angle: null,
-		pos: null,
-		vel: null,
-		thrust: null,
-		ref: null,
-		bulletDelay: null,
-		idle: null,
-		radius: null,
+		    {
+			    angle      : null,
+			    pos        : null,
+			    vel        : null,
+			    thrust     : null,
+			    ref        : null,
+			    bulletDelay: null,
+			    idle       : null,
+			    radius     : null,
 
-		update: function()
-		{
-			this.vel.add(this.thrust);
-			this.pos.add(this.vel);
+			    update: function() {
+				    this.vel.add(this.thrust);
+				    this.pos.add(this.vel);
 
-			if(this.vel.getLength() > 5) this.vel.setLength(5);
+				    if (this.vel.getLength() > 5) this.vel.setLength(5);
 
-			++this.bulletDelay;
+				    ++this.bulletDelay;
 
-			if(this.idle)
-			{
-				if(++this.idleDelay > 120)
-				{
-					this.idleDelay = 0;
-					this.idle = false;
+				    if (this.idle) {
+					    if (++this.idleDelay > 120) {
+						    this.idleDelay = 0;
+						    this.idle = false;
 
-					this.ref.resetGame();
-				}
-			}
-		},
+						    this.ref.resetGame();
+					    }
+				    }
+			    },
 
-		shoot: function()
-		{
-			if(this.bulletDelay > 8)
-			{
-				this.ref.generateShot();
-				this.bulletDelay = 0;
-			}
-		}
-	};
+			    shoot: function() {
+				    if (this.bulletDelay > 8) {
+					    this.ref.generateShot();
+					    this.bulletDelay = 0;
+				    }
+			    }
+		    };
 
-	return {create:create};
+	return { create: create };
 }());

@@ -1,9 +1,7 @@
-var Asteroid = (function()
-{
+var Asteroid = (function() {
 	//exposed methods:
 
-	var create = function()
-	{
+	var create = function() {
 		var obj = Object.create(def);
 		obj.radius = 40;
 		obj.color = '#FF5900';
@@ -21,28 +19,26 @@ var Asteroid = (function()
 	//Ship definition:
 
 	var def =
-	{
-		radius: null,
-		color: null,
-		pos: null,
-		vel: null,
-		blacklisted: null,
-		type: null,
-		sides: null,
-		angle: null,
-		angleVel: null,
+		    {
+			    radius     : null,
+			    color      : null,
+			    pos        : null,
+			    vel        : null,
+			    blacklisted: null,
+			    type       : null,
+			    sides      : null,
+			    angle      : null,
+			    angleVel   : null,
 
-		update: function()
-		{
-			this.pos.add(this.vel);
-			this.angle += this.angleVel;
-		},
+			    update: function() {
+				    this.pos.add(this.vel);
+				    this.angle += this.angleVel;
+			    },
 
-		reset: function()
-		{
-			this.blacklisted = false;
-		}
-	};
+			    reset: function() {
+				    this.blacklisted = false;
+			    }
+		    };
 
-	return {create:create};
+	return { create: create };
 }());
