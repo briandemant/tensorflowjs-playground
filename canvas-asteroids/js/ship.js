@@ -12,6 +12,7 @@ let Ship = (function() {
 		obj.idle = false;
 		obj.radius = 8;
 		obj.idleDelay = 0;
+		obj.alive = true
 
 		return obj;
 	};
@@ -40,6 +41,7 @@ let Ship = (function() {
 				if (++this.idleDelay > 120) {
 					this.idleDelay = 0;
 					this.idle = false;
+					this.alive = true;
 
 					this.ref.resetGame();
 				}

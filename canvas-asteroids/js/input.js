@@ -5,8 +5,12 @@ let keyUp = false
 let keyRight = false
 let keySpace = false
 
+let autopilot = false
+
 function keyboardInit() {
 	window.onkeydown = function(e) {
+		if (autopilot && e.keyCode != 84) return
+
 		switch (e.keyCode) {
 			//key A or LEFT
 			case 65:
@@ -30,11 +34,16 @@ function keyboardInit() {
 			case 32:
 				keySpace = true
 				break
-		}
 
-		// developer console :)
-		if (e.keyCode != 73) {
-			e.preventDefault()
+			//key T
+			case 84:
+				autopilot = !autopilot
+				if (autopilot) {
+					IO.emit("autopilot_enabled")
+				} else {
+					IO.emit("autopilot_disabled")
+				}
+				break
 		}
 	}
 
@@ -66,5 +75,12 @@ function keyboardInit() {
 
 		e.preventDefault()
 	}
+
+	IO.on("autopilot", function({ value }) {
+		keyLeft = value.keyLeft
+		keyRight = value.keyRight
+		keyUp = value.keyUp
+		keySpace = value.keySpace
+	})
 }
 

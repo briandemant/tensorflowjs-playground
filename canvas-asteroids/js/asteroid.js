@@ -1,10 +1,15 @@
 let Asteroid = (function() {
 	//exposed methods:
 
+	let colors = ['#00FF59', '#FF5900', '#5900FF', '#0059FF', '#FF0059', '#59FF00']
+
 	let create = function() {
 		let obj = Object.create(def);
 		obj.radius = 40;
-		obj.color = ['#00FF59', '#FF5900', '#5900FF', '#0059FF', '#FF0059', '#59FF00'][Math.random() * 6 | 0];
+
+		let color = colors.pop()
+		colors.unshift(color)
+		obj.color = color;
 		obj.pos = Vec2D.create(0, 0);
 		obj.vel = Vec2D.create(0, 0);
 		obj.blacklisted = false;

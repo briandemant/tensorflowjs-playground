@@ -1,5 +1,13 @@
 function loop() {
-	let value = { input: { keyLeft, keyUp, keyRight, keySpace } }
+
+	let state = {
+		input: { keyLeft, keyUp, keyRight, keySpace },
+		ship: { pos: ship.pos, vel: ship.vel, trust: ship.trust, angle: ship.angle },
+		asteroids: asteroids.map((asteroid) => ({ radius: asteroid.radius, pos: asteroid.pos, vel: asteroid.vel })),
+		bullets: bullets.map((bullet) => ({ pos: bullet.pos, vel: bullet.vel })),
+	}
+	let scoreWas = score
+
 	updateShip()
 	updateParticles()
 	updateBullets()
@@ -7,30 +15,32 @@ function loop() {
 
 	checkCollisions()
 
-	value.ship = { pos: ship.pos, vel: ship.vel, trust: ship.trust, angle: ship.angle }
-	value.asteroids = asteroids.map((asteroid) => ({ radius: asteroid.radius, pos: asteroid.pos, vel: asteroid.vel }))
-	value.bullets = bullets.map((bullet) => ({ pos: bullet.pos, vel: bullet.vel }))
-	value.score = score
+
 	render()
-	if (Math.random() > 0.99) {
-		IO.emit("change", value)
-	}
+
+	state.score = score | 0
+	state.deltaScore = score - scoreWas
+	state.ship.alive = ship.alive
+	IO.emit("state_changed", state)
 
 	getAnimationFrame(loop)
 }
 
-IO.on("change", (e) => {
-	console.log(e.value)
+IO.once("init", () => {
+	getAnimationFrame(loop)
 })
+
 
 function updateShip() {
 	ship.update()
 
 	if (ship.idle) return
 
+	score += ship.vel.getLength() / 10
+
 	if (keySpace) ship.shoot()
-	if (keyLeft) ship.angle -= 0.1
-	if (keyRight) ship.angle += 0.1
+	if (keyLeft) ship.angle -= 0.04
+	if (keyRight) ship.angle += 0.04
 
 	if (keyUp) {
 		ship.thrust.setLength(0.1)
@@ -168,6 +178,8 @@ function generateAsteroid(x, y, radius, type, color) {
 
 	if (!a) return
 
+	IO.emit("asteroid_created", { asteroid: a })
+
 	a.radius = radius
 	a.type = type
 	if (color) {
@@ -204,6 +216,7 @@ function checkBulletAsteroidCollisions() {
 
 				score += (100 - a.radius) * (ship.vel.getLength() / 3 + 0.2)
 				destroyAsteroid(a)
+				IO.emit("asteroid_hit", { asteroid: a })
 			}
 		}
 	}
@@ -220,7 +233,8 @@ function checkShipAsteroidCollisions() {
 			if (s.idle) return
 
 			s.idle = true
-
+			s.alive = false
+			IO.emit("ship_crash", { asteroid: a })
 			generateShipExplosion()
 			destroyAsteroid(a)
 		}
@@ -333,4 +347,5 @@ function generateShot() {
 	bullets[bullets.length] = b
 
 	score -= Math.min(score, 5)
+	IO.emit("shot_fired", { bullet: b })
 }

@@ -28,9 +28,16 @@ const IO = {
 		var event = new Event(name)
 		event.value = value
 		eventTarget.dispatchEvent(event)
+
+		var event = new Event("*")
+		event.value = { ...value, event: name }
+		eventTarget.dispatchEvent(event)
 	},
 	on: (name, fn) => {
-		eventTarget.addEventListener(name, fn)
+		eventTarget.addEventListener(name, fn, { capture: true })
+	},
+	once: (name, fn) => {
+		eventTarget.addEventListener(name, fn, { once: true, capture: true })
 	},
 }
 
@@ -57,9 +64,7 @@ window.onload = function() {
 	bulletInit()
 	asteroidInit()
 	shipInit()
-
-	loop()
-
+	render()
 
 	setInterval(() => {
 		maxAsteroids = Math.min(10, maxAsteroids + 1)
@@ -67,11 +72,10 @@ window.onload = function() {
 
 
 	setInterval(() => {
-		if (!ship.idle) {
-			score += ship.vel.getLength()
-		}
 		document.getElementById("score").innerText = score | 0
 	}, 100)
+
+	IO.emit("init")
 }
 
 window.onresize = function() {
