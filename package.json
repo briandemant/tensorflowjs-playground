@@ -1,0 +1,12 @@
+{
+  "name": "tensorflowjs-playground",
+  "version": "0.1",
+  "description": "fun with tensorflow.js",
+  "main": "index.js",
+  "repository": "git@github.com:briandemant/tensorflowjs-playground.git",
+  "author": "Brian Demant <brian.demant@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "browser-sync": "^2.26.3"
+  }
+}

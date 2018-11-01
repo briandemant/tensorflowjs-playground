@@ -9,7 +9,7 @@ canvas {
 	background: #262626;
 }
 
-#info {
+#infobox {
 	color: #FFF;
 	font-family: "Lucida Sans Typewriter", "Lucida Console", Monaco, "Bitstream Vera Sans Mono", monospace;
 	margin: 10px 10px 0;
@@ -19,10 +19,10 @@ canvas {
 	z-index: 1;
 }
 
-#info h1 {
+#infobox h1 {
 	font-size: 18px;
 }
 
-#info p {
+#infobox p {
 	font-size: 11px;
 }

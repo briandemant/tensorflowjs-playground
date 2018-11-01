@@ -4,7 +4,7 @@ let Asteroid = (function() {
 	let create = function() {
 		let obj = Object.create(def);
 		obj.radius = 40;
-		obj.color = '#FF5900';
+		obj.color = ['#00FF59', '#FF5900', '#5900FF', '#0059FF', '#FF0059', '#59FF00'][Math.random() * 6 | 0];
 		obj.pos = Vec2D.create(0, 0);
 		obj.vel = Vec2D.create(0, 0);
 		obj.blacklisted = false;
@@ -16,29 +16,28 @@ let Asteroid = (function() {
 		return obj;
 	};
 
-	//Ship definition:
+	//Asteroid definition:
 
-	let def =
-		    {
-			    radius     : null,
-			    color      : null,
-			    pos        : null,
-			    vel        : null,
-			    blacklisted: null,
-			    type       : null,
-			    sides      : null,
-			    angle      : null,
-			    angleVel   : null,
+	let def = {
+		radius     : null,
+		color      : null,
+		pos        : null,
+		vel        : null,
+		blacklisted: null,
+		type       : null,
+		sides      : null,
+		angle      : null,
+		angleVel   : null,
 
-			    update: function() {
-				    this.pos.add(this.vel);
-				    this.angle += this.angleVel;
-			    },
+		update: function() {
+			this.pos.add(this.vel);
+			this.angle += this.angleVel;
+		},
 
-			    reset: function() {
-				    this.blacklisted = false;
-			    }
-		    };
+		reset: function() {
+			this.blacklisted = false;
+		}
+	};
 
 	return { create: create };
 }());
