@@ -5,9 +5,9 @@
 	let autopilot = false
 	let prevState = null
 
-	IO.once("init", () => {
+	EventBus.once("init", () => {
 
-		IO.on("state_changed", ({ value }) => {
+		EventBus.on("state_changed", ({ value }) => {
 
 			if (gather) {
 				// print 1% of events
@@ -28,16 +28,17 @@
 			}
 		})
 
-		IO.on("reset", (e) => {
+		EventBus.on("reset", (e) => {
 			gather = true
 		})
 
-		IO.on("autopilot_enabled", ({ value }) => {
-			autopilot = true
+		EventBus.on("autopilot_enabled", ({ value }) => {
+
 			console.log(value)
 			console.log(trainingData)
 
-			setInterval(() => {
+			autopilot = setInterval(() => {
+
 				let straight = Math.random() > 0.5
 				let left = !straight && Math.random() > 0.5
 				let right = !straight && !left
@@ -50,21 +51,28 @@
 					keyUp: fly,
 					keyLeft: left,
 					keyRight: right,
-				} 
+				}
 
 				if (Math.random() > 0.8) {
-					IO.emit("autopilot", command)
+					EventBus.emit("autopilot", command)
 				}
 			}, 100)
 		})
-		IO.on("autopilot_disabled", ({ value }) => {
+
+		EventBus.on("autopilot_disabled", () => {
+			console.log(autopilot)
+			EventBus.emit("autopilot", {
+				keySpace: false,
+				keyUp: false,
+				keyLeft: false,
+				keyRight: false,
+			})
+			clearInterval(autopilot)
 			autopilot = false
-			console.log(value)
-			console.log(trainingData)
 		})
 
 
-		IO.on("*", (e) => {
+		EventBus.on("*", (e) => {
 			if (e.value.event != "state_changed") {
 				console.log(e.value.event)
 			}

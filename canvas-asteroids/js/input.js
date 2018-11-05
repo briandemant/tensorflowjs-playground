@@ -39,9 +39,9 @@ function keyboardInit() {
 			case 84:
 				autopilot = !autopilot
 				if (autopilot) {
-					IO.emit("autopilot_enabled")
+					EventBus.emit("autopilot_enabled")
 				} else {
-					IO.emit("autopilot_disabled")
+					EventBus.emit("autopilot_disabled")
 				}
 				break
 		}
@@ -76,7 +76,7 @@ function keyboardInit() {
 		e.preventDefault()
 	}
 
-	IO.on("autopilot", function({ value }) {
+	EventBus.on("autopilot", function({ value }) {
 		keyLeft = value.keyLeft
 		keyRight = value.keyRight
 		keyUp = value.keyUp

@@ -21,12 +21,12 @@ function loop() {
 	state.score = score | 0
 	state.deltaScore = score - scoreWas
 	state.ship.alive = ship.alive
-	IO.emit("state_changed", state)
+	EventBus.emit("state_changed", state)
 
 	getAnimationFrame(loop)
 }
 
-IO.once("init", () => {
+EventBus.once("init", () => {
 	getAnimationFrame(loop)
 })
 
@@ -167,18 +167,18 @@ function updateAsteroids() {
 			xFactor = Math.random()
 		}
 
-		generateAsteroid(screenWidth * xFactor, screenHeight * yFactor, 60, 'b')
+		generateAsteroid(screenWidth * xFactor, screenHeight * yFactor, Math.random() * doublePI, 60, 'b')
 	}
 }
 
-function generateAsteroid(x, y, radius, type, color) {
+function generateAsteroid(x, y, angle, radius, type, color) {
 	let a = asteroidPool.getElement()
 
 	//if the bullet pool doesn't have more elements, will return 'null'.
 
 	if (!a) return
 
-	IO.emit("asteroid_created", { asteroid: a })
+	EventBus.emit("asteroid_created", { asteroid: a })
 
 	a.radius = radius
 	a.type = type
@@ -186,13 +186,15 @@ function generateAsteroid(x, y, radius, type, color) {
 		a.color = color
 	}
 	a.pos.setXY(x, y)
-	a.vel.setLength(1 + asteroidVelFactor)
-	a.vel.setAngle(Math.random() * doublePI)
+	// a.vel.setLength(1)
+	a.vel.setLength(asteroidVel * (1 + Math.random()))
+
+	a.vel.setAngle(angle)
 
 	//bullets[bullets.length] = b; same as: bullets.push(b);
 
 	asteroids[asteroids.length] = a
-	asteroidVelFactor += 0.025
+	asteroidVel = Math.min(asteroidVel * 1.005, 2)
 }
 
 function checkCollisions() {
@@ -216,7 +218,7 @@ function checkBulletAsteroidCollisions() {
 
 				score += (100 - a.radius) * (ship.vel.getLength() / 3 + 0.2)
 				destroyAsteroid(a)
-				IO.emit("asteroid_hit", { asteroid: a })
+				EventBus.emit("asteroid_hit", { asteroid: a })
 			}
 		}
 	}
@@ -234,7 +236,7 @@ function checkShipAsteroidCollisions() {
 
 			s.idle = true
 			s.alive = false
-			IO.emit("ship_crash", { asteroid: a })
+			EventBus.emit("ship_crash", { asteroid: a })
 			generateShipExplosion()
 			destroyAsteroid(a)
 		}
@@ -307,30 +309,54 @@ function generateAsteroidExplosion(asteroid) {
 }
 
 function resolveAsteroidType(asteroid) {
-	switch (asteroid.type) {
-		case 'b':
+	if (asteroid.type == 't') return
 
-			generateAsteroid(asteroid.pos.getX(), asteroid.pos.getY(), 40, 'm', asteroid.color)
-			generateAsteroid(asteroid.pos.getX(), asteroid.pos.getY(), 40, 'm', asteroid.color)
+	let angle1 = asteroid.vel.getAngle() - Math.PI / 3 * (0.5 + Math.random() / 2)
+	let angle2 = asteroid.vel.getAngle() + Math.PI / 3 * (0.5 + Math.random() / 2)
+	let x = asteroid.pos.getX()
+	let y = asteroid.pos.getY()
 
-			break
+	let type = { 'b': 'm', 'm': 's', 's': 't' }[asteroid.type]
+	let radius = { 'b': 50, 'm': 40, 's': 30 }[asteroid.type]
 
-		case 'm':
-
-			generateAsteroid(asteroid.pos.getX(), asteroid.pos.getY(), 20, 's', asteroid.color)
-			generateAsteroid(asteroid.pos.getX(), asteroid.pos.getY(), 20, 's', asteroid.color)
-
-			break
-		case 's':
-
-			generateAsteroid(asteroid.pos.getX(), asteroid.pos.getY(), 10, 't', asteroid.color)
-			generateAsteroid(asteroid.pos.getX(), asteroid.pos.getY(), 10, 't', asteroid.color)
-
-			break
-	}
+	generateAsteroid(x, y, angle1, radius, type, asteroid.color)
+	generateAsteroid(x, y, angle2, radius, type, asteroid.color)
 }
 
 function generateShot() {
+	// function multiShot(diff) {
+	// 	shoot(ship.angle + Math.PI / diff + Math.PI / diff * Math.random())
+	// 	shoot(ship.angle - Math.PI / diff - Math.PI / diff * Math.random())
+	// }
+
+	shoot(ship.angle)
+	// multiShot(2)
+	// multiShot(4)
+	// multiShot(8)
+	// multiShot(16)
+
+	score -= Math.min(score, 5)
+}
+
+function shoot(angle) {
+	let b = bulletPool.getElement()
+
+	//if the bullet pool doesn't have more elements, will return 'null'.
+
+	if (!b) return
+
+	b.radius = 1
+	b.pos.setXY(ship.pos.getX() + Math.cos(ship.angle) * 14, ship.pos.getY() + Math.sin(ship.angle) * 14)
+	b.vel.setLength(10)
+	b.vel.setAngle(angle)
+
+	//bullets[bullets.length] = b; same as: bullets.push(b);
+
+	bullets[bullets.length] = b
+	EventBus.emit("shot_fired", { bullet: b })
+}
+
+function generateShotX() {
 	let b = bulletPool.getElement()
 
 	//if the bullet pool doesn't have more elements, will return 'null'.
@@ -347,5 +373,5 @@ function generateShot() {
 	bullets[bullets.length] = b
 
 	score -= Math.min(score, 5)
-	IO.emit("shot_fired", { bullet: b })
+	EventBus.emit("shot_fired", { bullet: b })
 }

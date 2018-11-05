@@ -17,13 +17,13 @@ let asteroidPool
 let asteroids
 
 let hScan
-let asteroidVelFactor = 0
+let asteroidVel = 0.5
 let maxAsteroids = 4
 let score = 0
 
 let eventTarget = document.getElementsByTagName("head")[0]
 
-const IO = {
+const EventBus = {
 	emit: (name, value) => {
 		var event = new Event(name)
 		event.value = value
@@ -75,7 +75,7 @@ window.onload = function() {
 		document.getElementById("score").innerText = score | 0
 	}, 100)
 
-	IO.emit("init")
+	EventBus.emit("init")
 }
 
 window.onresize = function() {
@@ -112,7 +112,7 @@ function shipInit() {
 
 
 function resetGame() {
-	asteroidVelFactor = 0
+	asteroidVel = 0.5
 	maxAsteroids = 4
 	score = 0
 	ship.pos.setXY(screenWidth >> 1, screenHeight >> 1)
