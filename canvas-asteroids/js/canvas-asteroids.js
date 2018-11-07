@@ -1,10 +1,9 @@
 function loop() {
-
 	let state = {
 		input: { keyLeft, keyUp, keyRight, keySpace },
 		ship: { pos: ship.pos, vel: ship.vel, trust: ship.trust, angle: ship.angle },
-		asteroids: asteroids.map((asteroid) => ({ radius: asteroid.radius, pos: asteroid.pos, vel: asteroid.vel })),
-		bullets: bullets.map((bullet) => ({ pos: bullet.pos, vel: bullet.vel })),
+		asteroids: asteroids.map(asteroid => ({ radius: asteroid.radius, pos: asteroid.pos, vel: asteroid.vel })),
+		bullets: bullets.map(bullet => ({ pos: bullet.pos, vel: bullet.vel })),
 	}
 	let scoreWas = score
 
@@ -15,21 +14,19 @@ function loop() {
 
 	checkCollisions()
 
-
 	render()
 
 	state.score = score | 0
 	state.deltaScore = score - scoreWas
 	state.ship.alive = ship.alive
-	EventBus.emit("state_changed", state)
+	EventBus.emit('state_changed', state)
 
 	getAnimationFrame(loop)
 }
 
-EventBus.once("init", () => {
+EventBus.once('init', () => {
 	getAnimationFrame(loop)
 })
-
 
 function updateShip() {
 	ship.update()
@@ -42,9 +39,17 @@ function updateShip() {
 	if (keyLeft) ship.angle -= 0.04
 	if (keyRight) ship.angle += 0.04
 
-	if (keyUp) {
-		ship.thrust.setLength(0.1)
-		ship.thrust.setAngle(ship.angle)
+	if (keyUp || keyDown) {
+		if (keyUp && keyDown) {
+			ship.thrust.setLength(0.01)
+			ship.thrust.setAngle(ship.angle)
+		} else if (keyUp) {
+			ship.thrust.setLength(0.1)
+			ship.thrust.setAngle(ship.angle)
+		} else {
+			ship.thrust.setLength(0.05)
+			ship.thrust.setAngle(ship.angle + Math.PI)
+		}
 
 		generateThrustParticle()
 	} else {
@@ -166,8 +171,15 @@ function updateAsteroids() {
 		} else if (yFactor == 0) {
 			xFactor = Math.random()
 		}
-
-		generateAsteroid(screenWidth * xFactor, screenHeight * yFactor, Math.random() * doublePI, 60, 'b')
+		let colors = ['#00FF59', '#FF5900', '#5900FF', '#0059FF', '#FF0059', '#59FF00']
+		generateAsteroid(
+			screenWidth * xFactor,
+			screenHeight * yFactor,
+			Math.random() * doublePI,
+			60,
+			'b',
+			colors[(Math.random() * colors.length) | 0]
+		)
 	}
 }
 
@@ -178,7 +190,7 @@ function generateAsteroid(x, y, angle, radius, type, color) {
 
 	if (!a) return
 
-	EventBus.emit("asteroid_created", { asteroid: a })
+	EventBus.emit('asteroid_created', { asteroid: a })
 
 	a.radius = radius
 	a.type = type
@@ -218,7 +230,7 @@ function checkBulletAsteroidCollisions() {
 
 				score += (100 - a.radius) * (ship.vel.getLength() / 3 + 0.2)
 				destroyAsteroid(a)
-				EventBus.emit("asteroid_hit", { asteroid: a })
+				EventBus.emit('asteroid_hit', { asteroid: a })
 			}
 		}
 	}
@@ -236,7 +248,7 @@ function checkShipAsteroidCollisions() {
 
 			s.idle = true
 			s.alive = false
-			EventBus.emit("ship_crash", { asteroid: a })
+			EventBus.emit('ship_crash', { asteroid: a })
 			generateShipExplosion()
 			destroyAsteroid(a)
 		}
@@ -258,7 +270,10 @@ function generateShipExplosion() {
 		p.color = ship.color
 		p.vel.setLength(20 / p.radius)
 		p.vel.setAngle(ship.angle + (1 - Math.random() * 2) * doublePI)
-		p.pos.setXY(ship.pos.getX() + Math.cos(p.vel.getAngle()) * (ship.radius * 0.8), ship.pos.getY() + Math.sin(p.vel.getAngle()) * (ship.radius * 0.8))
+		p.pos.setXY(
+			ship.pos.getX() + Math.cos(p.vel.getAngle()) * (ship.radius * 0.8),
+			ship.pos.getY() + Math.sin(p.vel.getAngle()) * (ship.radius * 0.8)
+		)
 
 		//particles[particles.length] = p; same as: particles.push(p);
 
@@ -300,7 +315,10 @@ function generateAsteroidExplosion(asteroid) {
 		p.color = asteroid.color
 		p.vel.setLength(20 / p.radius)
 		p.vel.setAngle(ship.angle + (1 - Math.random() * 2) * doublePI)
-		p.pos.setXY(asteroid.pos.getX() + Math.cos(p.vel.getAngle()) * (asteroid.radius * 0.8), asteroid.pos.getY() + Math.sin(p.vel.getAngle()) * (asteroid.radius * 0.8))
+		p.pos.setXY(
+			asteroid.pos.getX() + Math.cos(p.vel.getAngle()) * (asteroid.radius * 0.8),
+			asteroid.pos.getY() + Math.sin(p.vel.getAngle()) * (asteroid.radius * 0.8)
+		)
 
 		//particles[particles.length] = p; same as: particles.push(p);
 
@@ -311,13 +329,13 @@ function generateAsteroidExplosion(asteroid) {
 function resolveAsteroidType(asteroid) {
 	if (asteroid.type == 't') return
 
-	let angle1 = asteroid.vel.getAngle() - Math.PI / 3 * (0.5 + Math.random() / 2)
-	let angle2 = asteroid.vel.getAngle() + Math.PI / 3 * (0.5 + Math.random() / 2)
+	let angle1 = asteroid.vel.getAngle() - (Math.PI / 3) * (0.5 + Math.random() / 2)
+	let angle2 = asteroid.vel.getAngle() + (Math.PI / 3) * (0.5 + Math.random() / 2)
 	let x = asteroid.pos.getX()
 	let y = asteroid.pos.getY()
 
-	let type = { 'b': 'm', 'm': 's', 's': 't' }[asteroid.type]
-	let radius = { 'b': 50, 'm': 40, 's': 30 }[asteroid.type]
+	let type = { b: 'm', m: 's', s: 't' }[asteroid.type]
+	let radius = { b: 50, m: 40, s: 30 }[asteroid.type]
 
 	generateAsteroid(x, y, angle1, radius, type, asteroid.color)
 	generateAsteroid(x, y, angle2, radius, type, asteroid.color)
@@ -353,7 +371,7 @@ function shoot(angle) {
 	//bullets[bullets.length] = b; same as: bullets.push(b);
 
 	bullets[bullets.length] = b
-	EventBus.emit("shot_fired", { bullet: b })
+	EventBus.emit('shot_fired', { bullet: b })
 }
 
 function generateShotX() {
@@ -373,5 +391,5 @@ function generateShotX() {
 	bullets[bullets.length] = b
 
 	score -= Math.min(score, 5)
-	EventBus.emit("shot_fired", { bullet: b })
+	EventBus.emit('shot_fired', { bullet: b })
 }

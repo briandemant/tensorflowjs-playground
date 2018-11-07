@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+	<link href='app.css' rel='stylesheet'>
+	<title>Better Colors</title>
+
+	<script src="https://unpkg.com/brain.js@1.1.2/browser.min.js"> </script>
+	<script src="better-colors-brain.js"></script>
+	<!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.3/dist/tf.min.js"> </script>-->
+	<!--<script src="better-colors-tf.js"></script>-->
+</head>
+<body>
+	<h1>How good does this theme look?</h1>
+	<div class="editor-wrapper">
+		<span class="color-1">import</span> React <span class="color-1">from</span> <span class="color-2">"react"</span><br/>
+		<span class="color-1">import</span> ReactDOM <span class="color-1">from</span> <span class="color-2">"react-dom"</span><br/>
+		<span class="color-1">import {</span> Provider <span class="color-1">} from</span> <span class="color-2">"react-redux"</span><br/>
+		<br/>
+		<span class="color-1">import</span> Layout <span class="color-1">from</span> <span class="color-2">"./components/Layout"</span><br/>
+		<span class="color-1">import</span> store <span class="color-1">from</span> <span class="color-2">"./store"</span><br/>
+		<br/>
+		<span class="color-1">const</span> app<span class="color-1"> = </span>document.<span class="color-3">getElementById</span><span class="color-1">(</span><span class="color-2">'app'</span><span class="color-1">)</span><br/>
+		<br/>
+		                                    ReactDOM.render<span class="color-1">(</span>&lt;<span class="color-3">Provider store={</span>store<span class="color-3">}</span>&gt;<br/>
+		                                    &nbsp;&nbsp;&lt;<span class="color-3">Layout </span>/&gt;<br/>
+		                                    &lt;/<span class="color-3">Provider</span>&gt;, app<span class="color-1">)</span>
+	</div>
+	<hr/>
+	<button class="star" id="star1">★</button>
+	<button class="star" id="star2">★</button>
+	<button class="star" id="star3">★</button>
+	<button class="star" id="star4">★</button>
+	<button class="star" id="star5">★</button>
+	<h4>
+		Guess <span id="guess"></span>
+	</h4>
+	<hr/>
+	<div id="themes"></div>
+
+	<script src="app.js"></script>
+</body>
+</html>

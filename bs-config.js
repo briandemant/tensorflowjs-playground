@@ -47,7 +47,7 @@ module.exports = {
     "logSnippet": true,
     "rewriteRules": [],
     // "open": "local",
-    "browser": "default",
+    "browser": false,
     "cors": false,
     "xip": false,
     "hostnameSuffix": false,

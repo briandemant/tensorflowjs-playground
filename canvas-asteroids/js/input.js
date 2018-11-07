@@ -2,6 +2,7 @@
 
 let keyLeft = false
 let keyUp = false
+let keyDown = false
 let keyRight = false
 let keySpace = false
 
@@ -11,22 +12,29 @@ function keyboardInit() {
 	window.onkeydown = function(e) {
 		if (autopilot && e.keyCode != 84) return
 
+console.log(e.keyCode )
 		switch (e.keyCode) {
-			//key A or LEFT
-			case 65:
-			case 37:
+			case 65: // a
+			case 37: // left
+			case 90: // z
 				keyLeft = true
 				break
 
-			//key W or UP
-			case 87:
-			case 38:
+			case 87: // w
+			case 38: // up
+			case 68: // d
 				keyUp = true
 				break
 
-			//key D or RIGHT
-			case 68:
-			case 39:
+			case 83: // s
+			case 40: // down
+			case 88: // x
+				keyDown = true
+				break
+
+			case 68: // d
+			case 39: // right
+			case 67: // c
 				keyRight = true
 				break
 
@@ -49,21 +57,27 @@ function keyboardInit() {
 
 	window.onkeyup = function(e) {
 		switch (e.keyCode) {
-			//key A or LEFT
-			case 65:
-			case 37:
+			case 65: // a
+			case 37: // left
+			case 90: // z
 				keyLeft = false
 				break
 
-			//key W or UP
-			case 87:
-			case 38:
+			case 87: // w
+			case 38: // up
+			case 68: // d
 				keyUp = false
 				break
 
-			//key D or RIGHT
-			case 68:
-			case 39:
+			case 83: // s
+			case 40: // down
+			case 88: // x
+				keyDown = false
+				break
+
+			case 68: // d
+			case 39: // right
+			case 67: // c
 				keyRight = false
 				break
 
@@ -80,6 +94,7 @@ function keyboardInit() {
 		keyLeft = value.keyLeft
 		keyRight = value.keyRight
 		keyUp = value.keyUp
+		keyDown = value.keyDown
 		keySpace = value.keySpace
 	})
 }

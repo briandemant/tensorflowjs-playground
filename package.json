@@ -6,7 +6,12 @@
   "repository": "git@github.com:briandemant/tensorflowjs-playground.git",
   "author": "Brian Demant <brian.demant@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "puer",
+    "startx": "browser-sync start --config bs-config.js"
+  },
   "dependencies": {
-    "browser-sync": "^2.26.3"
+    "browser-sync": "^2.26.3",
+    "puer": "^2.0.1"
   }
 }

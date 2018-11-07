@@ -44,11 +44,13 @@
 				let right = !straight && !left
 
 				let fly = Math.random() > 0.3
-				let shoot = fly || Math.random() > 0.8
+				let back = !fly && Math.random() > 0.3
+				let shoot = back || fly || Math.random() > 0.8
 
 				let command = {
 					keySpace: shoot,
 					keyUp: fly,
+					keyDown: back,
 					keyLeft: left,
 					keyRight: right,
 				}
